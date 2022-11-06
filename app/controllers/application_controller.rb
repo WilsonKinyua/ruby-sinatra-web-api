@@ -1,6 +1,11 @@
 class ApplicationController < Sinatra::Base
 
     set :default_content_type, "application/json"
+
+    # allow access-control-allow-origin header on all requests
+    before do
+        response.headers["Access-Control-Allow-Origin"] = "*"
+    end
     
     get '/' do
         {hello: "Just doing the coding 😃"}.to_json
