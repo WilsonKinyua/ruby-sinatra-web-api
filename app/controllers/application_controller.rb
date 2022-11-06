@@ -16,6 +16,7 @@ class ApplicationController < Sinatra::Base
         Category.find(params[:id]).to_json
     end
 
+
     # crud for todo_lists ==================================
 
 
@@ -32,12 +33,12 @@ class ApplicationController < Sinatra::Base
 
     # read
     get '/todo_lists' do
-        TodoList.all.to_json
+        TodoList.all.to_json(include: :category)
     end
 
     # get one todo_list
     get '/todo_lists/:id' do
-        TodoList.find(params[:id]).to_json
+        TodoList.find(params[:id]).to_json(include: :category)
     end
 
     # update
@@ -49,14 +50,34 @@ class ApplicationController < Sinatra::Base
             category_id: params[:category_id],
             status: params[:status]
         )
-        todo_list.to_json
+        {message: "Todo list updated!"}.to_json
     end
 
     # delete
     delete '/todo_lists/:id' do
         todo_list = TodoList.find(params[:id])
         todo_list.destroy
-        todo_list.to_json
+        {message: "Todo List '#{todo_list.title}' has been deleted."}.to_json
+    end
+
+
+
+    # abit of advanced stuffs huhh 😎 ===============================
+
+
+    # get all todo_lists of a category
+    get '/categories/:id/todo_lists' do
+        Category.find(params[:id]).todo_lists.to_json(include: :category)
+    end
+
+    # get all todo_lists of a category that are not completed
+    get '/categories/:id/todo_lists/active' do
+        Category.find(params[:id]).todo_lists.where(status: false).to_json(include: :category)
+    end
+
+    # get all todo_lists of a category that are completed
+    get '/categories/:id/todo_lists/completed' do
+        Category.find(params[:id]).todo_lists.where(status: true).to_json(include: :category)
     end
 
 end
