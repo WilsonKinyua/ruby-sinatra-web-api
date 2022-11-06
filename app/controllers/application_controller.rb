@@ -12,7 +12,7 @@ class ApplicationController < Sinatra::Base
     end
 
     # get one category
-    get '/categories/:id' do
+    get '/category/:id' do
         Category.find(params[:id]).to_json
     end
 
@@ -21,7 +21,7 @@ class ApplicationController < Sinatra::Base
 
 
     # create
-    post '/todo_lists' do
+    post '/todo_list' do
         todo_list = TodoList.create(
             title: params[:title],
             description: params[:description],
@@ -37,12 +37,12 @@ class ApplicationController < Sinatra::Base
     end
 
     # get one todo_list
-    get '/todo_lists/:id' do
+    get '/todo_list/:id' do
         TodoList.find(params[:id]).to_json(include: :category)
     end
 
     # update
-    patch '/todo_lists/:id' do
+    patch '/todo_list/:id' do
         todo_list = TodoList.find(params[:id])
         todo_list.update(
             title: params[:title],
@@ -54,7 +54,7 @@ class ApplicationController < Sinatra::Base
     end
 
     # delete
-    delete '/todo_lists/:id' do
+    delete '/todo_list/:id' do
         todo_list = TodoList.find(params[:id])
         todo_list.destroy
         {message: "Todo List '#{todo_list.title}' has been deleted."}.to_json
@@ -66,17 +66,17 @@ class ApplicationController < Sinatra::Base
 
 
     # get all todo_lists of a category
-    get '/categories/:id/todo_lists' do
+    get '/category/:id/todo_lists' do
         Category.find(params[:id]).todo_lists.to_json(include: :category)
     end
 
     # get all todo_lists of a category that are not completed
-    get '/categories/:id/todo_lists/active' do
+    get '/category/:id/todo_lists/active' do
         Category.find(params[:id]).todo_lists.where(status: false).to_json(include: :category)
     end
 
     # get all todo_lists of a category that are completed
-    get '/categories/:id/todo_lists/completed' do
+    get '/category/:id/todo_lists/completed' do
         Category.find(params[:id]).todo_lists.where(status: true).to_json(include: :category)
     end
 
