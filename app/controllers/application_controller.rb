@@ -6,6 +6,11 @@ class ApplicationController < Sinatra::Base
     before do
         response.headers["Access-Control-Allow-Origin"] = "*"
     end
+
+    # enable CORS preflight requests
+    options "*" do
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    end
     
     get '/' do
         {hello: "Just doing the coding 😃"}.to_json
